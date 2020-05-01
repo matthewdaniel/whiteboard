@@ -1,14 +1,16 @@
 (ns whiteboard.views
   (:require
-   [re-frame.core :as re-frame]
+   [re-frame.core :as rf]
    [whiteboard.subs :as subs]
+   [whiteboard.events :as events]
+   [reagent.core :refer [create-class dom-node]]
    ))
 
 
 ;; home
 
 (defn home-panel []
-  (let [name (re-frame/subscribe [::subs/name])]
+  (let [name (rf/subscribe [::subs/name])]
     [:div
      [:h1 (str "Hello from " @name ". This is the Home Page.")]
 
@@ -40,6 +42,22 @@
 (defn show-panel [panel-name]
   [panels panel-name])
 
+(defn main-canvas []
+  (create-class 
+   {
+    :component-did-mount 
+    #(->> % (dom-node) (conj [::events/initialize-canvas]) (rf/dispatch))
+    :reagent-render (fn [] [:canvas {:id "canvas" :width 800 :height 800}])}))
+
+(defn stream-panel []
+  (let [stream (rf/subscribe [::subs/stream])]
+    [:div#stream-panel 
+     [:div (count @stream)]
+     [:button {:on-click #(rf/dispatch [::events/undo])}  "undo"]]))
+
 (defn main-panel []
-  (let [active-panel (re-frame/subscribe [::subs/active-panel])]
-    [show-panel @active-panel]))
+  (let [active-panel (rf/subscribe [::subs/active-panel])]
+    [:div#main
+     [:div#canvas-container
+      [main-canvas]]
+     [stream-panel]]))

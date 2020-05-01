@@ -21,5 +21,6 @@
 (defn init []
   (routes/app-routes)
   (re-frame/dispatch-sync [::events/initialize-db])
+  (re-frame/dispatch-sync [::events/initialize-canvas])
   (dev-setup)
   (mount-root))
