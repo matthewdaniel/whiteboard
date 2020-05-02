@@ -1,2 +1,3 @@
 todos: 
     Resize canvas on window resize
+    move the drawing stuff into a map so we don't have to maintain what to delete on clear

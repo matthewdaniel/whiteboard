@@ -19,7 +19,7 @@
   [:canvas]
   [:div#main {:display "flex" :height "100%"}
    [:div#canvas-container {:flex 1}]
-   [:div#stream-panel 
+   [:div#right-panel 
     {:width "200px"
      :background-color "#eee"
      :padding "8px"

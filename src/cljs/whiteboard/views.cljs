@@ -45,19 +45,27 @@
 (defn main-canvas []
   (create-class 
    {
-    :component-did-mount 
+    :component-did-mount
     #(->> % (dom-node) (conj [::events/initialize-canvas]) (rf/dispatch))
     :reagent-render (fn [] [:canvas {:id "canvas" :width 800 :height 800}])}))
 
-(defn stream-panel []
-  (let [stream (rf/subscribe [::subs/stream])]
-    [:div#stream-panel 
-     [:div (count @stream)]
-     [:button {:on-click #(rf/dispatch [::events/undo])}  "undo"]]))
+(defn snap [{:keys [time]}] [:span (str time)])
+
+(defn snapshots []
+  (let [snaps (rf/subscribe [::subs/snapshots])]
+    [:div.snap-panel (map snap @snaps)]))
+
+(defn right-panel []
+    ;; (cljs.pprint/pprint [:stream @stream])
+  [:div#right-panel
+   [:div 
+    [:button {:on-click #(rf/dispatch [::events/undo])}  "undo"]
+    [:button {:on-click #(rf/dispatch [::events/snapshot])}  "snapshot"]
+    [:button {:on-click #(rf/dispatch [::events/clear-stream])} "clear"]]
+   [snapshots]])
 
 (defn main-panel []
-  (let [active-panel (rf/subscribe [::subs/active-panel])]
-    [:div#main
-     [:div#canvas-container
-      [main-canvas]]
-     [stream-panel]]))
+  [:div#main
+   [:div#canvas-container
+    [main-canvas]]
+   [right-panel]])
