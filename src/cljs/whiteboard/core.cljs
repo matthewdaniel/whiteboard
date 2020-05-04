@@ -1,8 +1,9 @@
 (ns whiteboard.core
   (:require
    [reagent.core :as reagent]
-   [re-frame.core :as re-frame]
+   [re-frame.core :refer [dispatch-sync clear-subscription-cache!]]
    [whiteboard.events :as events]
+   [whiteboard.keyboardfx :as keyboardfx]
    [whiteboard.routes :as routes]
    [whiteboard.views :as views]
    [whiteboard.config :as config]
@@ -14,13 +15,13 @@
     (println "dev mode")))
 
 (defn ^:dev/after-load mount-root []
-  (re-frame/clear-subscription-cache!)
+  (clear-subscription-cache!)
   (reagent/render [views/main-panel]
                   (.getElementById js/document "app")))
 
 (defn init []
   (routes/app-routes)
-  (re-frame/dispatch-sync [::events/initialize-db])
-  (re-frame/dispatch-sync [::events/initialize-canvas])
+  (dispatch-sync [::events/initialize-db])
+  (dispatch-sync [::keyboardfx/initialize-shortcuts])
   (dev-setup)
   (mount-root))

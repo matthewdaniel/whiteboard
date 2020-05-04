@@ -1,5 +1,7 @@
 (defproject whiteboard "0.1.0-SNAPSHOT"
   :dependencies [[org.clojure/clojure "1.10.1"]
+                 [lein-npm "0.6.2"]
+                 [camel-snake-kebab "0.4.1"]
                  [org.clojure/clojurescript "1.10.597"
                   :exclusions [com.google.javascript/closure-compiler-unshaded
                                org.clojure/google-closure-library
@@ -11,6 +13,7 @@
                  [garden "1.3.9"]
                  [ns-tracker "0.4.0"]]
 
+  :npm {:dependencies ["luxon" "1.23.0" "uuid" "^8"]}
   :plugins [[lein-garden "0.3.0"]
             [lein-shell "0.5.0"]]
 

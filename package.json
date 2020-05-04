@@ -7,7 +7,10 @@
     "shadow-cljs": "2.8.83"
   },
   "dependencies": {
+    "@fortawesome/fontawesome-free": "^5.13.0",
+    "luxon": "^1.23.0",
     "react": "16.9.0",
-    "react-dom": "16.9.0"
+    "react-dom": "16.9.0",
+    "uuid": "^8.0.0"
   }
 }

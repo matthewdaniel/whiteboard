@@ -1,6 +1,7 @@
 (ns whiteboard.shapefx
   (:require
-   [re-frame.core :as rf]))
+   [re-frame.core :as rf]
+   [whiteboard.helpers.shared :refer [>evt]]))
 
 (defn connect-points [ctx [{x1 :x y1 :y} {x2 :x y2 :y}]]
   (when (and ctx (not= [x1 y1] [x2 y2]) x2)
@@ -8,13 +9,12 @@
     (.lineTo ctx x2 y2)
     (.stroke ctx)))
 
-(defn free-hand-updater [ctx {:keys [points]}]
+(defn free-hand-updater [ctx {:keys [points config]}]
   (when (= 2 (count (take-last 2 points)))
     (.beginPath ctx)
-    (set! (.-strokeStyle ctx) "black")
-    (set! (.-lineWidth ctx) 1)
-    (connect-points ctx (take-last 2 points)))
-  )
+    (set! (.-strokeStyle ctx) (:line-color config))
+    (set! (.-lineWidth ctx) (:line-width config))
+    (connect-points ctx (take-last 2 points))))
 
 (rf/reg-fx
  ::shape-modified
@@ -36,7 +36,6 @@
   (case (:type shape)
     :free-hand (free-hand-redraw ctx shape)))
 
-
 (rf/reg-fx
  ::rebuild-shape-stream
  (fn [stream]
@@ -45,6 +44,5 @@
      (.clearRect ctx 0 0 (.-width canvas) (.-height canvas))
      (.restore ctx)
      ; redraw each shape
-     (doall (map #(->> % (last) (redraw-shape ctx)) stream))
-     )))
+     (doall (map #(->> % (last) (redraw-shape ctx)) stream)))))
 
