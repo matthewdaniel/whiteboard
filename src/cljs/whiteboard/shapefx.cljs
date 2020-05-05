@@ -16,13 +16,17 @@
     (set! (.-lineWidth ctx) (:line-width config))
     (connect-points ctx (take-last 2 points))))
 
+(defn text-updater [ctx {:keys [points]}]
+  ())
+
 (rf/reg-fx
  ::shape-modified
  (fn [shape]
    (let [canvas (.getElementById js/document "canvas")
          ctx (.getContext canvas "2d")]
      (case (:type shape)
-       :free-hand (free-hand-updater ctx shape)))))
+       :free-hand (free-hand-updater ctx shape)
+       :text (text-updater ctx shape)))))
 
 (defn free-hand-redraw [ctx {:keys [points] :as all}]
   (when (= 2 (count (take-last 2 points)))
@@ -34,7 +38,8 @@
 
 (defn redraw-shape [ctx shape]
   (case (:type shape)
-    :free-hand (free-hand-redraw ctx shape)))
+    :free-hand (free-hand-redraw ctx shape)
+    :text (free-hand-redraw ctx shape)))
 
 (rf/reg-fx
  ::rebuild-shape-stream

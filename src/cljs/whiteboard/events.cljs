@@ -18,7 +18,13 @@
 
 (def default-draw-config 
   {:line-width 2
+   :tool :free-hand
    :line-color (if (str/includes? (.-className js/document.body) "dark-mode") "#fff" "#000")})
+
+(reg-event-db
+ ::change-draw-tool
+ (fn [db [_ new-type]]
+ (assoc-in db [:draw :config :tool] new-type)))
 
 (reg-event-db
  ::change-draw-line-width
@@ -73,9 +79,13 @@
       stream-item
       (conj-in stream-item [:points] xy))))
 
+(defn text-stream-item-init [xy stream-item]
+  (assoc stream-item  :points [xy]))
+
 (defn update-stream-item [xy stream-item]
   (case (:type stream-item)
-    :free-hand (free-hand-stream-item-updater xy stream-item)))
+    :free-hand (free-hand-stream-item-updater xy stream-item)
+    :text (text-stream-item-init xy stream-item)))
 
 (defn init-stream-item [type id]
   {:id id :type type :points []})
@@ -86,7 +96,7 @@
  (fn [{:keys [db]} [_ event]]  
    (-> event
        (event-xy)
-       (update-stream-item (init-stream-item :free-hand (random-uuid)))
+       (update-stream-item (init-stream-item (get-in db [:draw :config :tool]) (random-uuid)))
        (merge {:config (get-in db [:draw :config])})
        ((partial assoc db :active-stream))
        (#(assoc {} :db % ::shapefx/shape-modified (:active-stream %))))))

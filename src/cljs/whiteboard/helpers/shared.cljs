@@ -7,6 +7,8 @@
 (def >evt rf/dispatch)
 (def >value-evt (fn [[evt js-event]]
                   (rf/dispatch [evt (-> js-event .-target .-value)])))
+(def >kewordize-value-evt (fn [[evt js-event]]
+                  (rf/dispatch [evt (-> js-event .-target .-value (csk/->kebab-case-keyword)) ])))
 
 (defn event-dispatcher [name] #(->> % (conj [name]) (rf/dispatch)))
 

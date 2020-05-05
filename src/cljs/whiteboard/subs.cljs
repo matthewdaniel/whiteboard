@@ -26,6 +26,11 @@
  #(:line-width %))
 
 (reg-sub
+ ::draw-tool
+ (fn [_ _] (subscribe [::draw-config]))
+   #(-> % :tool (name)))
+
+(reg-sub
  ::preview-mode
  (fn [{:keys [preview]}]
    preview))

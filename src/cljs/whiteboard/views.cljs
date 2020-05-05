@@ -1,7 +1,7 @@
 (ns whiteboard.views
   (:require
    [luxon :refer [DateTime]]
-   [whiteboard.helpers.shared :refer [<sub >evt >value-evt]]
+   [whiteboard.helpers.shared :refer [<sub >evt >value-evt >kewordize-value-evt]]
    [whiteboard.subs :as subs]
    [whiteboard.events :as events]
    [reagent.core :refer [create-class dom-node]]))
@@ -35,6 +35,12 @@
     :on-click #(>evt [::events/change-color color])
     } color])
 
+(defn type-select []
+  [:select
+   {:value (<sub [::subs/draw-tool]) :on-change #(>kewordize-value-evt [::events/change-draw-tool %])}
+   [:option {:value :free-hand} "Free Hand"]
+   [:option {:value :text} "Text"]])
+
 (defn left-panel []
   [:div.left-panel
    [:div.input-row 
@@ -42,6 +48,7 @@
     [:input {:type "number" 
              :on-change #(>value-evt [::events/change-draw-line-width %])
              :value (<sub [::subs/draw-line-width])}]]
+   [type-select]
    [:div.input-row
     [:span "Color"]
     [:div.color-buttons

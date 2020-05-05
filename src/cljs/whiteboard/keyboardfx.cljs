@@ -15,7 +15,7 @@
 
 (reg-event-fx
  ::keydown
- (fn [{:keys [event]}]
+ (fn [{:keys [event db]}]
    (let [[_ keydown-js] event
          {:keys [key ctrl-key meta-key]} (js-to-clj keydown-js)
          pressed (keyword (str (when meta-key "meta-") (when ctrl-key "ctrl-") key))
@@ -25,7 +25,12 @@
                {})]
      ; if we have a handler then stop default behavior
      (when (not= ret {}) (.preventDefault keydown-js))
+    ;;  (when (= :text (get-in db [:active-stream :config :tool]))
+       (cljs.pprint/pprint [:keydown key (get-in db [:active-stream :config])])
+    ;;  )
+
      ret)))
+
 
 (reg-event-fx
  ::initialize-shortcuts
