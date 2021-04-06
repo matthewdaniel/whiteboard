@@ -7,10 +7,18 @@
     "shadow-cljs": "2.8.83"
   },
   "dependencies": {
+    "@firebase/app": "^0.6.18",
+    "@firebase/database": "^0.9.7",
+    "@firebase/storage": "^0.4.6",
     "@fortawesome/fontawesome-free": "^5.13.0",
+    "@svgdotjs/svg.js": "^3.0.16",
+    "d3-interpolate": "^1.4.0",
+    "d3-shape": "^1.3.7",
+    "fraction.js": "^4.0.12",
     "luxon": "^1.23.0",
     "react": "16.9.0",
     "react-dom": "16.9.0",
+    "save-svg-as-png": "^1.4.17",
     "uuid": "^8.0.0"
   }
 }

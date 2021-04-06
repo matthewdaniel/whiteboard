@@ -1,17 +1,18 @@
 (ns whiteboard.keyboardfx
   (:require
-   [whiteboard.events :as event]
+   [whiteboard.events :as events]
    [whiteboard.helpers.shared :refer [js-to-clj event-dispatcher >evt]]
    [luxon :refer [DateTime]]
    [clojure.string :as str]
-   [whiteboard.shapefx :as shapefx]
-   [re-frame.core :refer [reg-fx dispatch reg-event-fx]]
+   [re-frame.core :refer [reg-fx dispatch reg-event-fx reg-event-db]]
    [whiteboard.db :as db]))
 
 (reg-fx
  ::ctrl-z
  (fn [_]
-   (>evt [::event/undo])))
+   (>evt [::events/undo])))
+
+(reg-event-db ::ctrl-down #(assoc % :ctrl-hold true))
 
 (reg-event-fx
  ::keydown
@@ -19,21 +20,40 @@
    (let [[_ keydown-js] event
          {:keys [key ctrl-key meta-key]} (js-to-clj keydown-js)
          pressed (keyword (str (when meta-key "meta-") (when ctrl-key "ctrl-") key))
-         ret (case pressed
+         evt (case pressed
                :ctrl-z {::ctrl-z nil}
                :meta-z {::ctrl-z nil}
+               :ctrl-Control {:dispatch [::ctrl-down]}
+               :Escape {:dispatch [::esc]}
                {})]
-     ; if we have a handler then stop default behavior
-     (when (not= ret {}) (.preventDefault keydown-js))
-    ;;  (when (= :text (get-in db [:active-stream :config :tool]))
-       (cljs.pprint/pprint [:keydown key (get-in db [:active-stream :config])])
-    ;;  )
+     (-> {} (merge evt)))))
 
-     ret)))
+(reg-event-fx
+ ::esc
+(fn [{:keys [event db]}]
+   (let [active-stream-id (:active-stream db)
+         next-db (if-not active-stream-id
+       db
+       (-> db
+         (update :stream dissoc active-stream-id)
+         (dissoc :active-stream)
+         ))
+         ]
+     {:db db
+      :dispatch [::events/set-visible-menu nil]}
+   )))
 
+(reg-event-fx
+ ::keyup
+ (fn [{:keys [event db]}]
+   (let [[_ keydown-js] event
+         {:keys [key ctrl-key]} (js-to-clj keydown-js)]
+     (when-not ctrl-key {:db (dissoc db :ctrl-hold)}))))
 
 (reg-event-fx
  ::initialize-shortcuts
  (fn [_ _]
-   (.addEventListener js/document "keydown" (event-dispatcher ::keydown) false)))
+   (.addEventListener js/document "keydown" (event-dispatcher ::keydown) false)
+   (.addEventListener js/document "keyup" (event-dispatcher ::keyup) false)))
+
 

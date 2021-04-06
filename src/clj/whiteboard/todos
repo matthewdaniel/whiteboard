@@ -1,11 +1,20 @@
 todos: 
-    consider making the event canvas dispatchers type specific
-        eg :free-hand-mouse-down :text-mouse-down
-        need to have other interactions clear the active stream
-
-    clear should clear the board and not the snapshots
+    re-evaluate if smoothing algorithm is worth adding - it makes writing letters difficult
     Resize canvas on window resize
-    move the drawing stuff into a map so we don't have to maintain what to delete on clear
     font-awesom kit code 10c49b5362
     mousescroll should zoom
-    
+    if x -> y -> z is strait line, don't append z but replace y (smaller changeset to record and transmit)
+
+    make sure font style and size closely match for input box and drawing
+    make font size 1-x rather than 12,13,14
+    support right and center align text
+
+    base config stock
+
+    cleanup old snapshot styling and other remants in css
+    have a draw svg and a regular one to make drawing faster. 
+
+    fix undo on poly/oval
+
+    make api for saving work push snaps to cloud and replace the data uri 
+    -- old deploy ae53fc8

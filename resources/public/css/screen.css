@@ -6,23 +6,159 @@ div#app {
   height: 100%;
 }
 
+div.welcome {
+  right: 0;
+  top: 0;
+  justify-content: center;
+  font-family: cursive;
+  align-items: center;
+  position: absolute;
+  z-index: -2;
+  font-size: 80px;
+  display: flex;
+  bottom: 0;
+  color: #8888ff88;
+  left: 0;
+}
+
 body {
-  color: black;
-  height: 100%;
-  padding: 0;
-  margin: 0;
-  background-image: radial-gradient(#ddd 3%, #fff 5%);
-  background-position: 0 0;
-  background-size: 49px 49px;
   width: 100%;
+  background-position: 0 0;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  background-size: 49px 49px;
+  overflow: hidden;
+  background-image: radial-gradient(#ddd 3%, #fff 5%);
+  color: black;
 }
 
 body.dark-mode {
   background-image: radial-gradient(#aca 2%, #333 5%);
 }
 
+div.svg-canvas-wrapper {
+  width: 100%;
+  height: 100%;
+}
+
+div.canvas-overlay {
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+}
+
+svg.svg-canvas {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  z-index: -1;
+}
+
 div#app {
   height: 100%;
+}
+
+div.snaps {
+  right: 20px;
+  user-select: none;
+  border: 1px solid #ddd;
+  padding: 10px;
+  flex-direction: column;
+  position: absolute;
+  border-top-right-radius: 5px;
+  border-bottom-width: 0;
+  display: flex;
+  bottom: 0;
+  background: #eee;
+  max-height: 90%;
+  border-top-left-radius: 5px;
+}
+
+div.snaps .tray-header {
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  position: relative;
+}
+
+div.snaps .tray-header div.snap-animation {
+  position: absolute;
+}
+
+div.snaps .tray-header div.snap-animation.start {
+  right: 15px;
+  bottom: 90px;
+  font-size: 70px;
+  opacity: 0.5;
+}
+
+div.snaps .tray-header div.snap-animation.finish {
+  transition: 800ms;
+  bottom: -10px;
+  opacity: 0;
+  right: 30px;
+  font-size: 30px;
+}
+
+div.snaps .tray-header .expand {
+  margin-left: 10px;
+  padding-right: 20px;
+}
+
+div.snaps .tray-header .expand .ico {
+  position: absolute;
+  top: 5px;
+  right: 13px;
+  color: #999;
+}
+
+div.snaps img.snap-img {
+  background-color: white;
+  width: 150px;
+  height: 150px;
+}
+
+div.action-menu.action .title {
+  display: none;
+}
+
+div.action-menu div.button {
+  font-size: 22px;
+  cursor: pointer;
+  border-radius: 10px;
+  margin: 2px;
+  padding: 8px;
+}
+
+div.action-menu div.button:hover {
+  background-color: #00000011;
+}
+
+div.action-menu div.action-panel-container {
+  position: relative;
+}
+
+div.action-menu div.action-panel-container div.action-panel {
+  top: -55px;
+  align-items: center;
+  padding: 15px;
+  flex-direction: column;
+  visibility: hidden;
+  position: absolute;
+  background-color: #eee;
+  border-radius: 10px;
+  display: flex;
+  transition: left 150ms linear, opacity 50ms ease-out;
+  color: black;
+  opacity: 0;
+  left: 90px;
+}
+
+div.action-menu div.action-panel-container div.action-panel.active {
+  visibility: inherit;
+  left: 60px;
+  opacity: 1;
 }
 
 div#main {
@@ -51,7 +187,6 @@ div#main div#canvas-container div.preview.hidden {
 
 div#main div#canvas-container div.preview div.preview-message {
   right: 40px;
-  border: 1px solid cornflowerblue;
   padding: 15px 15px 5px 15px;
   position: absolute;
   border-top-right-radius: 10px;
@@ -74,7 +209,6 @@ div#main div#canvas-container div.preview div.preview-message div.preview-close 
 
 div#main div#right-panel {
   width: 200px;
-  border-left: 1px solid cornflowerblue;
   height: 100%;
   -webkit-box-shadow: inset 33px 0px 10px -36px rgba(100,149,237,1);
   padding: 8px;
@@ -85,6 +219,10 @@ div#main div#right-panel {
   background-color: #eee;
   box-sizing: border-box;
   display: flex;
+}
+
+div#main div#right-panel button {
+  margin: px;
 }
 
 .dark-mode div#right-panel {
@@ -104,7 +242,6 @@ div.snapshot-panel {
   padding-top: 10px;
   flex-direction: column;
   user-select: none;
-  max-height: 100%;
   overflow: auto;
 }
 
@@ -119,8 +256,10 @@ div.snapshot-panel div.snapshot {
   align-items: center;
 }
 
-div.snapshot-panel div.snapshot.active {
-  border: 2px solid cornflowerblue;
+div.snapshot-panel div.snapshot div.time {
+  position: absolute;
+  bottom: 2px;
+  right: 2px;
 }
 
 div.snapshot-panel div.snapshot i.restore-snap {
@@ -148,24 +287,103 @@ div.snapshot-panel div.snapshot div.description {
 }
 
 div.left-panel {
-  width: 150px;
-  background-color: wheat;
+  top: 10px;
+  -webkit-box-shadow: 5px 5px 30px -20px #919191;
+  border: 1px solid #dedede;
   padding: 8px;
+  flex-direction: column;
+  position: absolute;
+  z-index: 2;
+  box-shadow: 5px 5px 30px -20px #919191;
+  background-color: #eee;
+  border-radius: 10px;
+  display: flex;
+  left: 10px;
+}
+
+div.misc-actions {
   display: flex;
   flex-direction: column;
+}
+
+div.misc-actions div.action-item {
+  display: flex;
+  align-items: center;
+  padding: 10px;
+  border-radius: 3px;
+  cursor: pointer;
+}
+
+div.misc-actions div.action-item .ico {
+  width: 25px;
+}
+
+div.misc-actions div.action-item:hover {
+  background-color: #00000011;
+}
+
+div.misc-actions div.action-item div.desc {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  align-items: flex-start;
+  margin-left: 5px;
+  line-height: 10px;
+  font-size: 13px;
+  white-space: nowrap;
+}
+
+div.misc-actions div.action-item div.desc .key-combo {
+  font-size: 8px;
+  white-space: nowrap;
+  margin-top: 4px;
+  display: flex;
+  align-items: center;
+}
+
+div.tools {
+  display: flex;
+}
+
+div.tools div {
+  margin: 10px 20px;
+  cursor: pointer;
+  font-size: 20px;
 }
 
 div.color-buttons {
   display: flex;
-  border: 1px solid black;
-  flex-direction: column;
   padding: 8px;
-  background-color: white;
 }
 
 div.color-buttons button.color {
   border: 1px solid;
-  padding: 5px;
-  margin: 5px;
+  margin: 10px 20px;
+  width: 20px;
+  padding: 0;
+  height: 20px;
   cursor: pointer;
+  border-radius: 100px;
+}
+
+div.color-buttons button.color:hover {
+  -webkit-box-shadow: 2px ​2px 4px -1px #555;
+  box-shadow: 2px ​2px 4px -1px #555;
+}
+
+svg.shadow-shape {
+  height: 100%;
+  width: 100%;
+  position: absolute;
+  z-index: -1;
+}
+
+input#text-shadow-shape {
+  outline: none;
+  border: 2px dotted aqua;
+  position: absolute;
+  z-index: -1;
+  padding: 5px;
+  margin-top: -10px;
+  margin-left: -10px;
 }
